@@ -15,7 +15,8 @@
     "iron-pages": "polymerelements/iron-pages#^1.0.0",
     "iron-selector": "polymerelements/iron-selector#^1.0.0",
     "paper-icon-button": "polymerelements/paper-icon-button#^1.0.0",
-    "iron-icons": "PolymerElements/iron-icons#^1.2.1"
+    "iron-icons": "PolymerElements/iron-icons#^1.2.1",
+    "paper-card": "PolymerElements/paper-card#^1.1.6"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"

@@ -1,20 +1,71 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
 
 <dom-module id="news-login">
+
+  <style>
+    .hide {
+      display: none;
+    }
+
+    :host {
+      --paper-card: {
+        border-radius: 2.25rem;
+        width: 2rem;
+        max-width: 2rem;
+      }
+    }
+
+  </style>
+
   <template>
-    <paper-icon-button icon="account-circle" on-click="_login"></paper-icon-button>
+    <paper-icon-button id="login" icon="account-circle" on-click="_login">
+    </paper-icon-button>
+    <paper-card id="card" class="hide" image="[[user.profilePicture]]">
+    </paper-card>
   </template>
 
+  <script src="https://ui-dot-bwlys-1654.appspot.com/client"></script>
+
   <script>
+    var HINT_CONFIG = {
+      supportedAuthMethods: ['https://accounts.google.com'],
+      supportedIdTokenProviders: [{
+        uri: 'https://accounts.google.com',
+        // This client ID corresponds to a pantheon staging (using testgaia)
+        // project.
+        clientId: '108718660871379920870'
+      }]
+    };
+
+    openyolo.setProviderUrlBase('https://ui-dot-bwlys-1654.appspot.com/iframe/request');
+
+    // register custom element.
     Polymer({
       is: 'news-login',
       properties: {
-
+        user: {
+          type: Object,
+          notify: true
+        },
       },
       _login: function () {
-        console.log('Implement logging in.');
-      }
+        var that = this;
+        openyolo.hint(HINT_CONFIG)
+          .then(function (credential) {
+            that.set('user', credential);
+            // toggle state
+            that.$.login.classList.add('hide');
+            that.$.card.classList.remove('hide');
+            that.updateStyles();
+            // broadcast event
+            var newsApp = document.querySelector('news-app');
+            if (newsApp) {
+              newsApp._updateLoggedInState(credential);
+            }
+          });
+      },
     });
   </script>
 

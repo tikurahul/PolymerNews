@@ -217,6 +217,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         category: Object,
 
+        loggedIn: {
+          type: Boolean,
+          value: false,
+          notify: true,
+          reflectToAttribute: true
+        },
+
         article: Object,
 
         previousArticle: {
@@ -253,7 +260,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       observers: [
         '_loadArticle(article.html)',
-        '_loggedInState(article.loggedIn)',
+        '_loggedInState(loggedIn)',
         '_articleChanged(article)'
       ],
 
@@ -429,8 +436,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      _loggedInState: function(article) {
-        if (article.loggedIn) {
+      _loggedInState: function() {
+        if (this.loggedIn) {
           this.classList.remove('not-logged-in');
         } else {
           this.classList.add('not-logged-in');

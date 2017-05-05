@@ -132,6 +132,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           failure="[[failure]]"></news-list>
       <!-- article view -->
       <news-article
+          id="article"
+          loggedIn="{{loggedIn}}""
           name="article"
           route="{{subroute}}"
           category-name="{{categoryName}}"
@@ -165,6 +167,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         page: {
           type: String,
           observer: '_pageChanged'
+        },
+
+        loggedIn: {
+          type: Boolean,
+          value: false,
+          notify: true
         },
 
         categories: Array,
@@ -319,6 +327,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _refreshData: function() {
         this.$.data.refresh();
+      },
+
+      _updateLoggedInState: function(credential) {
+        if (credential) {
+          this.loggedIn = true;
+          this.$.data.loggedIn = true;
+          this.$.article.loggedIn = true;
+          this.$.data.refresh();
+        }
       }
 
     });
