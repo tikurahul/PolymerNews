@@ -1,0 +1,21 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+
+<dom-module id="news-login">
+  <template>
+    <paper-icon-button icon="account-circle" on-click="_login"></paper-icon-button>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'news-login',
+      properties: {
+
+      },
+      _login: function () {
+        console.log('Implement logging in.');
+      }
+    });
+  </script>
+
+</dom-module>

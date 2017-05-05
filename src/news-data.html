@@ -46,6 +46,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         offline: Boolean,
 
+        loggedIn: {
+          type: Boolean,
+          value: false,
+          reflect: true,
+          reflectToAttribute: true
+        },
+
         loading: {
           type: Boolean,
           readOnly: true,
@@ -87,6 +94,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return null;
       },
 
+      // article is really an item so has the important `loggedIn` property
       _fetchArticle: function(article, offline) {
         // Don't fail if we become offline but already have a cached version, or if there's
         // nothing to fetch, or if already loading.
@@ -129,6 +137,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         for (var i = 0, item; item = response[i]; ++i) {
           items.push({
+            // pass logged in state to components
+            loggedIn: this.loggedIn,
             headline: this._unescapeText(item.title),
             href: this._getItemHref(item),
             id: item.id,

@@ -12,6 +12,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="news-login.html" >
 
 <dom-module id="news-header">
 
@@ -254,6 +256,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div class="logo" main-title>
           <a href="/" aria-label$="[[_computeAppHomeLabel(appTitle)]]">[[appTitle]]</a>
         </div>
+        <!-- login -->
+        <news-login></news-login>
       </app-toolbar>
       <div class="date-line" role="heading">
         [[category.title]] <span aria-hidden="true">&nbsp;&middot;&nbsp;</span> [[_currentTime()]]
@@ -357,6 +361,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _computeAppHomeLabel: function(appTitle) {
         return appTitle + ' Home';
+      },
+
+      _login: function() {
+        console.log('Implement logging in.');
       }
 
     });
