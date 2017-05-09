@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
 <dom-module id="news-login">
 
@@ -9,37 +10,41 @@
       display: none;
     }
 
-    :host {
+     :host {
       --paper-card: {
-        border-radius: 2.25rem;
-        width: 2rem;
-        max-width: 2rem;
+        font-size: 12px;
+        background-color: transparent;
       }
     }
-
   </style>
 
   <template>
     <paper-icon-button id="login" icon="account-circle" on-click="_login">
     </paper-icon-button>
     <paper-card id="card" class="hide" image="[[user.profilePicture]]">
+      <div class="card-content">
+        [[user.id]]
+      </div>
     </paper-card>
+    <paper-toast id="message">
+    </paper-toast>
   </template>
 
-  <script src="https://ui-dot-bwlys-1654.appspot.com/client"></script>
+  <script src="smartlock.js"></script>
 
   <script>
     var HINT_CONFIG = {
-      supportedAuthMethods: ['https://accounts.google.com'],
+      supportedAuthMethods: [
+        'smartlock://email',
+        'https://accounts.google.com'
+      ],
       supportedIdTokenProviders: [{
         uri: 'https://accounts.google.com',
-        // This client ID corresponds to a pantheon staging (using testgaia)
-        // project.
-        clientId: '108718660871379920870'
+        clientId: '511828570984-dhnshqcpegee66hgnp754dupe8sbas18.apps.googleusercontent.com'
       }]
     };
 
-    openyolo.setProviderUrlBase('https://ui-dot-bwlys-1654.appspot.com/iframe/request');
+    openyolo.setProviderUrlBase('https://smartlock.sandbox.google.com/iframe/request');
 
     // register custom element.
     Polymer({
@@ -52,7 +57,7 @@
       },
       _login: function () {
         var that = this;
-        openyolo.hint(HINT_CONFIG)
+        smartlock.hint(HINT_CONFIG)
           .then(function (credential) {
             that.set('user', credential);
             // toggle state
@@ -63,6 +68,8 @@
             var newsApp = document.querySelector('news-app');
             if (newsApp) {
               newsApp._updateLoggedInState(credential);
+              that.$.message.text = 'Welcome ' + credential.displayName;
+              that.$.message.open();
             }
           });
       },
