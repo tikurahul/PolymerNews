@@ -21,7 +21,7 @@
   <template>
     <paper-icon-button id="login" icon="account-circle" on-click="_login">
     </paper-icon-button>
-    <paper-card id="card" class="hide" image="[[user.profilePicture]]">
+    <paper-card id="card" class="hide">
       <div class="card-content">
         [[user.id]]
       </div>
@@ -30,9 +30,13 @@
     </paper-toast>
   </template>
 
-  <script src="smartlock.js"></script>
+  <script src="https://smartlock-autopush.corp.google.com/client"></script>
 
   <script>
+
+    var STAGING_CLIENT_ID = '108718660871379920870';
+    var PUBLIC_CLIENT_ID = '511828570984-dhnshqcpegee66hgnp754dupe8sbas18.apps.googleusercontent.com';
+
     var HINT_CONFIG = {
       supportedAuthMethods: [
         'smartlock://email',
@@ -40,11 +44,11 @@
       ],
       supportedIdTokenProviders: [{
         uri: 'https://accounts.google.com',
-        clientId: '511828570984-dhnshqcpegee66hgnp754dupe8sbas18.apps.googleusercontent.com'
+        clientId: PUBLIC_CLIENT_ID
       }]
     };
 
-    openyolo.setProviderUrlBase('https://smartlock.sandbox.google.com/iframe/request');
+    openyolo.setProviderUrlBase('https://smartlock-autopush.corp.google.com/iframe/request');
 
     // register custom element.
     Polymer({
@@ -71,6 +75,9 @@
               that.$.message.text = 'Welcome ' + credential.displayName;
               that.$.message.open();
             }
+          })
+          .catch(error => {
+            console.log('Something bad happened ', error);
           });
       },
     });
