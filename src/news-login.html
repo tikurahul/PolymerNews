@@ -63,17 +63,19 @@
         var that = this;
         smartlock.hint(HINT_CONFIG)
           .then(function (credential) {
-            that.set('user', credential);
-            // toggle state
-            that.$.login.classList.add('hide');
-            that.$.card.classList.remove('hide');
-            that.updateStyles();
-            // broadcast event
-            var newsApp = document.querySelector('news-app');
-            if (newsApp) {
-              newsApp._updateLoggedInState(credential);
-              that.$.message.text = 'Welcome ' + credential.displayName;
-              that.$.message.open();
+            if (credential) {
+              that.set('user', credential);
+              // toggle state
+              that.$.login.classList.add('hide');
+              that.$.card.classList.remove('hide');
+              that.updateStyles();
+              // broadcast event
+              var newsApp = document.querySelector('news-app');
+              if (newsApp) {
+                newsApp._updateLoggedInState(credential);
+                that.$.message.text = 'Welcome ' + credential.displayName;
+                that.$.message.open();
+              }
             }
           })
           .catch(error => {
