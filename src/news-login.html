@@ -19,7 +19,7 @@
   </style>
 
   <template>
-    <paper-icon-button id="login" src="https://lh3.googleusercontent.com/fKYxJWmqWKS5JTWJUHJSE6u4tKZ6JbFx7YGMbbH0cI72r3E2MhU0vPrE6uaflUm94Q=w64" on-click="_login">
+    <paper-icon-button id="login" src="/images/ic_account_circle_black_48dp.png" on-click="_login">
     </paper-icon-button>
     <paper-card id="card" class="hide">
       <div class="card-content">
@@ -30,7 +30,7 @@
     </paper-toast>
   </template>
 
-  <script src="https://smartlock-autopush.corp.google.com/client"></script>
+  <script src="https://smartlock.sandbox.google.com/client"></script>
 
   <script>
 
@@ -48,7 +48,7 @@
       }]
     };
 
-    openyolo.setProviderUrlBase('https://smartlock-autopush.corp.google.com/iframe/request');
+    openyolo.setProviderUrlBase('https://smartlock.sandbox.google.com/iframe/request');
 
     // register custom element.
     Polymer({
