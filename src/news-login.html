@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
@@ -10,7 +11,7 @@
       display: none;
     }
 
-     :host {
+    :host {
       --paper-card: {
         font-size: 12px;
         background-color: transparent;
@@ -22,22 +23,22 @@
     <paper-icon-button id="login" src="/images/ic_account_circle_black_48dp.png" on-click="_login">
     </paper-icon-button>
     <paper-card id="card" class="hide">
-      <div class="card-content">
+      <span class="card-content">
         [[user.id]]
-      </div>
+      </span>
+      <paper-button id="logout" class="hide" on-click="_logout">Logout</paper-button>
     </paper-card>
     <paper-toast id="message">
     </paper-toast>
   </template>
 
-  <script src="https://smartlock.sandbox.google.com/client"></script>
+  <script src="https://smartlock.google.com/client"></script>
 
   <script>
-
     var STAGING_CLIENT_ID = '108718660871379920870';
     var PUBLIC_CLIENT_ID = '511828570984-dhnshqcpegee66hgnp754dupe8sbas18.apps.googleusercontent.com';
 
-    var HINT_CONFIG = {
+    var CONFIG = {
       supportedAuthMethods: [
         'smartlock://email',
         'https://accounts.google.com'
@@ -48,8 +49,6 @@
       }]
     };
 
-    openyolo.setProviderUrlBase('https://smartlock.sandbox.google.com/iframe/request');
-
     // register custom element.
     Polymer({
       is: 'news-login',
@@ -59,28 +58,67 @@
           notify: true
         },
       },
+      _update: function (credential) {
+        if (credential) {
+          this.set('user', credential);
+          // toggle state
+          this.$.login.classList.add('hide');
+          this.$.logout.classList.remove('hide');
+          this.$.card.classList.remove('hide');
+          this.updateStyles();
+          // broadcast event
+          var newsApp = document.querySelector('news-app');
+          if (newsApp) {
+            newsApp._updateLoggedInState(credential);
+            this.$.message.text = 'Welcome ' + credential.displayName;
+            this.$.message.open();
+          }
+        } else {
+          this.set('user', null);
+          // toggle state
+          this.$.login.classList.remove('hide');
+          this.$.logout.classList.add('hide');
+          this.$.card.classList.add('hide');
+          this.updateStyles();
+          // broadcast event
+          var newsApp = document.querySelector('news-app');
+          if (newsApp) {
+            newsApp._updateLoggedInState(null);
+          }
+        }
+      },
       _login: function () {
         var that = this;
-        smartlock.hint(HINT_CONFIG)
+        smartlock.hint(CONFIG)
           .then(function (credential) {
-            if (credential) {
-              that.set('user', credential);
-              // toggle state
-              that.$.login.classList.add('hide');
-              that.$.card.classList.remove('hide');
-              that.updateStyles();
-              // broadcast event
-              var newsApp = document.querySelector('news-app');
-              if (newsApp) {
-                newsApp._updateLoggedInState(credential);
-                that.$.message.text = 'Welcome ' + credential.displayName;
-                that.$.message.open();
-              }
-            }
+            that._update(credential);
           })
           .catch(error => {
             console.log('Something bad happened ', error);
           });
+      },
+      _logout: function () {
+        var that = this;
+        smartlock.disableAutoSignIn()
+          .then(function () {
+            that._update(null);
+          })
+          .catch(error => {
+            console.log('Something bad happened ', error);
+          });
+      },
+      ready: function () {
+        var that = this;
+        if (!this.user) {
+          // try and automatically sign the user in.
+          smartlock.retrieve(CONFIG)
+            .then(function (credential) {
+              that._update(credential);
+            })
+            .catch(error => {
+              console.log('Something bad happened ', error);
+            });
+        }
       },
     });
   </script>

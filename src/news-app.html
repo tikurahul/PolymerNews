@@ -330,12 +330,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _updateLoggedInState: function(credential) {
-        if (credential) {
-          this.loggedIn = true;
-          this.$.data.loggedIn = true;
-          this.$.article.loggedIn = true;
-          this.$.data.refresh();
-        }
+        var loggedIn = !!credential;
+        this.loggedIn = loggedIn;
+        this.$.data.loggedIn = loggedIn;
+        this.$.article.loggedIn = loggedIn;
+        this.$.data.refresh();
       }
 
     });
