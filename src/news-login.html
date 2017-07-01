@@ -37,6 +37,7 @@
   <script>
     var STAGING_CLIENT_ID = '108718660871379920870';
     var PUBLIC_CLIENT_ID = '511828570984-dhnshqcpegee66hgnp754dupe8sbas18.apps.googleusercontent.com';
+    var DISABLE_AUTOMATIC_SIGN_IN = 'disableAutoSignIn';
 
     var CONFIG = {
       supportedAuthMethods: [
@@ -56,6 +57,10 @@
         user: {
           type: Object,
           notify: true
+        },
+        disabledSignIn: {
+          type: String,
+          value: null
         },
       },
       _update: function (credential) {
@@ -91,6 +96,8 @@
         var that = this;
         smartlock.hint(CONFIG)
           .then(function (credential) {
+            this.disabledSignIn = 'false';
+            localStorage.removeItem(DISABLE_AUTOMATIC_SIGN_IN);
             that._update(credential);
           })
           .catch(error => {
@@ -99,6 +106,8 @@
       },
       _logout: function () {
         var that = this;
+        this.disabledSignIn = 'true';
+        localStorage.setItem(DISABLE_AUTOMATIC_SIGN_IN, 'true');
         smartlock.disableAutoSignIn()
           .then(function () {
             that._update(null);
@@ -108,16 +117,20 @@
           });
       },
       ready: function () {
-        var that = this;
-        if (!this.user) {
-          // try and automatically sign the user in.
-          smartlock.retrieve(CONFIG)
-            .then(function (credential) {
-              that._update(credential);
-            })
-            .catch(error => {
-              console.log('Something bad happened ', error);
-            });
+        var disabledSignIn = localStorage.getItem(DISABLE_AUTOMATIC_SIGN_IN);
+        this.disabledSignIn = disabledSignIn;
+        if (this.disabledSignIn !== 'true') {
+          var that = this;
+          if (!this.user) {
+            // try and automatically sign the user in.
+            smartlock.retrieve(CONFIG)
+              .then(function (credential) {
+                that._update(credential);
+              })
+              .catch(error => {
+                console.log('Something bad happened ', error);
+              });
+          } 
         }
       },
     });
