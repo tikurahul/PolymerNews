@@ -120,17 +120,18 @@
         var disabledSignIn = localStorage.getItem(DISABLE_AUTOMATIC_SIGN_IN);
         this.disabledSignIn = disabledSignIn;
         if (this.disabledSignIn !== 'true') {
+          console.log('Trying to automatically sign in the user in.');
           var that = this;
-          if (!this.user) {
-            // try and automatically sign the user in.
-            smartlock.retrieve(CONFIG)
-              .then(function (credential) {
-                that._update(credential);
-              })
-              .catch(error => {
-                console.log('Something bad happened ', error);
-              });
-          } 
+          // try and automatically sign the user in.
+          smartlock.retrieve(CONFIG)
+            .then(function (credential) {
+              that._update(credential);
+            })
+            .catch(error => {
+              console.log('Something bad happened ', error);
+            });
+        } else {
+          console.log('User has disabled auto sign in.');
         }
       },
     });
