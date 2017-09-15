@@ -35,6 +35,9 @@
   <script src="https://smartlock.google.com/client"></script>
 
   <script>
+    var NONCE_LENGTH = 10;
+    var CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var HAS_CRYPTO = typeof window !== 'undefined' && !!(window.crypto);
     var STAGING_CLIENT_ID = '108718660871379920870';
     var PUBLIC_CLIENT_ID = '511828570984-dhnshqcpegee66hgnp754dupe8sbas18.apps.googleusercontent.com';
     var DISABLE_AUTOMATIC_SIGN_IN = 'disableAutoSignIn';
@@ -47,9 +50,28 @@
       ],
       supportedIdTokenProviders: [{
         uri: 'https://accounts.google.com',
-        clientId: PUBLIC_CLIENT_ID
+        clientId: PUBLIC_CLIENT_ID,
+        nonce: generateRandom(NONCE_LENGTH)
       }]
     };
+
+    function generateRandom(sizeInBytes) {
+      let buffer = new Uint8Array(sizeInBytes);
+      if (HAS_CRYPTO) {
+        window.crypto.getRandomValues(buffer);
+      } else {
+        // fall back to Math.random() if nothing else is available
+        for (let i = 0; i < sizeInBytes; i += 1) {
+          buffer[i] = Math.random();
+        }
+      }
+      let state = [];
+      for (let i = 0; i < sizeInBytes; i += 1) {
+        let index = (buffer[i] % CHARSET.length) | 0;
+        state.push(CHARSET[index]);
+      }
+      return state.join('');
+    }
 
     // register custom element.
     Polymer({
@@ -66,6 +88,7 @@
       },
       _update: function (credential) {
         if (credential) {
+          console.info('Obtained credential ', credential);
           this.set('user', credential);
           // toggle state
           this.$.login.classList.add('hide');
