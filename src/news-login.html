@@ -3,6 +3,7 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/iron-signals/iron-signals.html">
 
 <dom-module id="news-login">
 
@@ -20,6 +21,7 @@
   </style>
 
   <template>
+    <iron-signals on-iron-signal-hint="_login"></iron-signals>
     <paper-icon-button id="login" src="/images/ic_account_circle_black_48dp.png" on-click="_login">
     </paper-icon-button>
     <paper-card id="card" class="hide">

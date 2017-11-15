@@ -224,6 +224,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           reflectToAttribute: true
         },
 
+        firstTimeHint: {
+          type: Boolean,
+          value: false
+        },
+
         article: Object,
 
         previousArticle: {
@@ -441,6 +446,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.classList.remove('not-logged-in');
         } else {
           this.classList.add('not-logged-in');
+          // fire a signal to the login component to trigger hint selection
+          // do this only once to avoid confusing the user
+          if (!this.firstTimeHint) {
+            this.fire('iron-signal', {name: 'hint'});
+            this.firstTimeHint = true;
+          }
         }
       },
 
